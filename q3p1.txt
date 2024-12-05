@@ -7,15 +7,24 @@ T = Graph([('g', 'h', 1), ('f', 'g', 2), ('c', 'i', 2), ('c', 'f', 4), ('a', 'b'
 
 aresta = ('b', 'e', 1)
 
+// Função que verifica se a aresta é válida
+Busca(a, b, peso)
+    if !Contain(G, a) or !Contain(G, b)
+         return False
+return True
 
 // Função que retorna a aresta que pertence a árvore mínima e pertence as arestas de b e faz parte do caminho da árvore saindo de a
 Busca(a, b)
-for each w in Adj[a]
-    if b == w and (PertenceT(a, b) or PertenceT(b, a))
+for each w in T.Adj[a]
+    if b == w
          return (a, b)
     Busca(w, b)
 
 // Código da main
+if Valido(aresta)
+    u = PrimeiroVertice(aresta)
+    v = SegundoVertice(aresta)
+
 arestaOriginal = Busca(u, v)
 if Peso(aresta) < Peso(arestaOriginal)
     T' = T
