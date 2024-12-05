@@ -1,0 +1,23 @@
+// Código Sage da questão 3 da P1
+
+// Função que retorna a aresta que pertence a árvore mínima e pertence as arestas de b e faz parte do caminho da árvore saindo de a
+Busca(a, b)
+for each w in Adj[a]
+    if b == w and (PertenceT(a, b) or PertenceT(b, a))
+         return (a, b)
+    Busca(w, b)
+
+// Código da main
+arestaOriginal = Busca(u, v)
+if Peso(aresta) < Peso(arestaOriginal)
+    T' = T
+    T' = T' + aresta - arestaOriginal
+    return T'
+
+arestaOriginal = Busca(v, u)
+if Peso(aresta) < Peso(arestaOriginal)
+    T' = T
+    T' = T' + aresta - arestaOriginal
+    return T'
+
+return T
