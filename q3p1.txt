@@ -1,5 +1,13 @@
 // Código Sage da questão 3 da P1
 
+
+G = Graph({"a":{"b":4,"h":8}, "b":{"c":8,"h":11}, "c":{"d":7,"f":4,"i":2}, "d":{"e":9,"f":14}, "e":{"f":10}, "f":{"g":2}, "g":{"h":1, "i":6}, "h":{"i":7}})
+
+T = Graph([('g', 'h', 1), ('f', 'g', 2), ('c', 'i', 2), ('c', 'f', 4), ('a', 'b', 4), ('c', 'd', 7), ('b', 'c', 8), ('d', 'e', 9)])
+
+aresta = ('b', 'e', 1)
+
+
 // Função que retorna a aresta que pertence a árvore mínima e pertence as arestas de b e faz parte do caminho da árvore saindo de a
 Busca(a, b)
 for each w in Adj[a]
