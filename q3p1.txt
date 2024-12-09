@@ -1,40 +1,106 @@
-// Código Sage da questão 3 da P1
 
 
-G = Graph({"a":{"b":4,"h":8}, "b":{"c":8,"h":11}, "c":{"d":7,"f":4,"i":2}, "d":{"e":9,"f":14}, "e":{"f":10}, "f":{"g":2}, "g":{"h":1, "i":6}, "h":{"i":7}})
 
-T = Graph([('g', 'h', 1), ('f', 'g', 2), ('c', 'i', 2), ('c', 'f', 4), ('a', 'b', 4), ('c', 'd', 7), ('b', 'c', 8), ('d', 'e', 9)])
+# Código Sage da questão 3 da P1
+
+G = Graph({ "a":{"b":4,"h":8}, 
+            "b":{"c":8,"h":11}, 
+            "c":{"d":7,"f":4,"i":2}, 
+            "d":{"e":9,"f":14}, 
+            "e":{"f":10}, 
+            "f":{"g":2}, 
+            "g":{"h":1, "i":6}, 
+            "h":{"i":7}})
+
+T = Graph([ ('g', 'h', 1), 
+            ('f', 'g', 2), 
+            ('c', 'i', 2), 
+            ('c', 'f', 4), 
+            ('a', 'b', 4), 
+            ('c', 'd', 7), 
+            ('b', 'c', 8), 
+            ('d', 'e', 9)])
 
 aresta = ('b', 'e', 1)
 
-// Função que verifica se a aresta é válida
-Busca(a, b, peso)
-    if !Contain(G, a) or !Contain(G, b)
-         return False
-return True
+# Função para retornar o peso de uma aresta
+def Peso(aresta):
+    return aresta[2]
+    
+# Função que verifica se os vertices são válidos (pertencem ao grafo)
+def Valido(G, aresta):
+    u, v = aresta[0], aresta[1]
+    return u in G and v in G
 
-// Função que retorna a aresta que pertence a árvore mínima e pertence as arestas de b e faz parte do caminho da árvore saindo de a
-Busca(a, b)
-for each w in T.Adj[a]
-    if b == w
-         return (a, b)
-    Busca(w, b)
+# Função que retorna a aresta mais pesada que pertence a árvore mínima e faz parte do caminho da árvore saindo de a até b
+def Busca(T, a, b, visitados=None, MaisPesada=None):
+    if visitados is None:
+        visitados = set()
+    if MaisPesada is None:
+        MaisPesada = (None, None, float('-inf'))  # Inicializa com peso mínimo
 
-// Código da main
-if Valido(aresta)
-    u = PrimeiroVertice(aresta)
-    v = SegundoVertice(aresta)
+    visitados.add(a)
 
-arestaOriginal = Busca(u, v)
-if Peso(aresta) < Peso(arestaOriginal)
-    T' = T
-    T' = T' + aresta - arestaOriginal
-    return T'
+    # Explorar vizinhos de `a`
+    for w in T.neighbors(a):
+        if w in visitados:
+            continue  # Evitar revisitar
 
-arestaOriginal = Busca(v, u)
-if Peso(aresta) < Peso(arestaOriginal)
-    T' = T
-    T' = T' + aresta - arestaOriginal
-    return T'
+        # Obter a aresta atual
+        aresta_atual = (a, w, T.edge_label(a, w))
+        #print(aresta_atual)
 
-return T
+        # Atualizar a mais pesada, se necessário
+        if Peso(aresta_atual) > Peso(MaisPesada):
+            MaisPesada = aresta_atual
+
+        if w == b:
+            # Encontrou `b`, retorna a mais pesada encontrada até aqui
+            return MaisPesada
+        else:
+            # Explorar o caminho recursivamente
+            resultado = Busca(T, w, b, visitados, MaisPesada)
+            if resultado:
+                return resultado
+    # Se não encontrar `b`, retorna `None`
+    return None
+
+# Função principal que resolve o problema
+def AtualizarArvore(G, T, aresta):
+    if Valido(G, aresta):
+        u = aresta[0]
+        v = aresta[1]
+    else:
+        return T
+
+    # Busca a aresta mais pesada do caminho de u até v
+    arestaOriginal = Busca(T, u, v)
+
+    if arestaOriginal is None:
+        # `b` não foi encontrado, não há atualização a ser feita
+        return T
+
+    if Peso(aresta) < Peso(arestaOriginal):
+        # Substitui a aresta na árvore
+        Arvore = T.copy()
+        Arvore.delete_edge(arestaOriginal)
+        Arvore.add_edge(u, v, Peso(aresta))
+        return Arvore
+
+    # Retorna a árvore que tinhamos antes
+    return T
+
+# Executando a função principal
+T_atualizada = AtualizarArvore(G, T, aresta)
+
+# Printando o grafo T_atualizada e plotando o grafo original G, T e T_atualizada
+#print(T_atualizada.edges())
+#layout = G.layout()
+#plot_G = G.plot(edge_labels=True)
+#plot_T = T.plot(edge_labels=True)
+#plot_T_atualizada = T_atualizada.plot(edge_labels=True)
+#show(plot_G, title="Grafo Original G")
+#show(plot_T, title="Árvore Geradora Mínima T")
+#show(plot_T_atualizada, title="Árvore Geradora Mínima Nova")
+
+
