@@ -1,0 +1,28 @@
+
+Na questão 3 letra A, iniciei com uma ideia errada.
+Na verdade a ideia central para resolução não é conferir se a nova aresta é mais leve que todas as outras,
+mas simplesmente conferir se é mais leve que a aresta mais pesada presente no caminho de u até v.
+Nesse caso o pseudo-codigo seria:
+
+AtualizarArvore(G, T, arestaNova):
+    u <- vertice_1(arestaNova)
+    v <- vertice_2(arestaNova)
+    arestaOriginalPesada <- Busca(T, u, v, Peso(arestaNova))
+    if Peso(aresta) < Peso(arestaOriginalPesada)
+        T <- T - arestaOriginalPesada + aresta
+    Retornar T
+
+Busca(T, a, b, MaisPesada)
+    if a.visitado == False
+        a.visitado == True
+        for cada verice w pertencente T.adj[a]
+            if MaisPesada < Peso(a, w)
+                MaisPesada <- Peso(a, w) 
+            if w == b
+                Retornar MaisPesada
+            else
+                Busca(T, w, b, MaisPesada)
+    Retornar MaisPesada
+
+Como o gráfico é de uma árvore geradora mínima, o número de arestas que devemos verificar para saber se são mais pesadas do que a aresta nova é no máximo o número de vértices 
+menos 1. Após isso, é feita uma verificação final para determinar se a nova aresta é mais leve do que a aresta mais pesada no caminho de u até v. Logo o tempo máximo é dependente apenas do numero de vértices sendo O(V).
